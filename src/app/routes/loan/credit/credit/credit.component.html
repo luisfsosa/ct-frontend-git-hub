@@ -1,0 +1,62 @@
+<div class="container-fluid">
+
+  <h4 class="page-title">Créditos</h4>
+
+  <div class="panel">
+    <div class="panel-body table-actions">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control col-md-6 input-sm" [(ngModel)]="term" placeholder="Buscar">
+            <span class="fa fa-search form-control-feedback"></span>
+          </div>
+        </div>
+
+        <div class="col-md-8" *userAction="['SUPER_USUARIO']">
+          <div class="pull-right">
+            <button class="btn btn-sm btn-default" (click)="add()">
+              <span class="fa fa-plus text-primary"></span>
+              Añadir Nuevo Crédito
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="panel panel-default">
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th *ngFor="let field of data.columns; let i = index">
+              {{ 'tables.headers.' + field | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let item of data.content | filter: term | slice:0:1000; let i = index"
+            [class.active]="i == selectedRow" [contextMenu]="book" [contextMenuSubject]="item">
+          <td *ngFor="let field of data.columns; let i = index">
+            <div [ngSwitch]="field">
+              <span *ngSwitchDefault class="{{field}}" title="{{item[i]}}">{{item[i]}}</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <context-menu #book *userAction="['SUPER_USUARIO']">
+    <ng-template let-item contextMenuItem (execute)="update($event.item)">
+      <i class="fa fa-pencil text-primary" aria-hidden="true"></i> Editar
+    </ng-template>
+
+    <ng-template contextMenuItem (execute)="remove($event.item,data.content)">
+      <i class="fa fa-times text-danger" aria-hidden="true"></i> Borrar
+    </ng-template>
+  </context-menu>
+</div>

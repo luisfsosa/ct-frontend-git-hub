@@ -1,0 +1,72 @@
+<div class="container-fluid">
+  
+    <h4 class="page-title">Crear usuarios</h4>
+  
+    <div class="panel">
+      <div class="panel-body table-actions">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group has-feedback">
+              <input type="text" class="form-control col-md-6 input-sm" [(ngModel)]="term" placeholder="Buscar">
+              <span class="fa fa-search form-control-feedback"></span>
+            </div>
+          </div>
+  
+          <div class="col-md-8">
+            <div class="pull-right">
+  
+              <button class="btn btn-sm btn-default" (click)="AddUser()">
+                <span class="fa fa-plus text-primary"></span>
+                Añadir Nuevo Usuario
+              </button>
+  
+  
+            </div>
+          </div>
+  
+        </div>
+      </div>
+  
+    </div>
+  
+  
+    <div class="panel panel-default">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th *ngFor="let field of data.columns; let i = index">
+                <!--{{field}}-->
+                <!--{{  field | translate }}-->
+                {{ field | translate }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+  
+            <tr *ngFor="let item of data.content | filter: term; let i = index" [class.active]="i == selectedRow" [contextMenu]="manageUser" [contextMenuSubject]="item">
+              <td *ngFor="let field of data.columns; let i = index">
+                <div [ngSwitch]="field">
+                  <span *ngSwitchCase="'fecha'" class="{{field}}" title="{{item[i]}}">{{item[i] | date: 'shortDate'}}</span>
+                  <span *ngSwitchCase="'total'" class="{{field}}" title="{{item[i]}}">{{item[i] | currency:'MXN':true}}</span>
+                  <span *ngSwitchCase="'cve_contable_quo'" class="{{field}}" title="{{item[i]}}">{{item[i] | currency:'MXN':true}}</span>
+                  <span *ngSwitchDefault class="{{field}}" title="{{item[i]}}">{{item[i]}}</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+  </div>
+  
+  <context-menu #manageUser>
+    <ng-template let-item contextMenuItem (execute)="updateform($event.item)">
+      <i class="fa fa-pencil text-primary" aria-hidden="true"></i> Editar
+    </ng-template>
+  
+    <ng-template contextMenuItem (execute)="remove($event.item,data.content)">
+      <i class="fa fa-times text-danger" aria-hidden="true"></i> Borrar
+    </ng-template>
+  </context-menu> 

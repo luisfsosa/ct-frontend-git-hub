@@ -1,0 +1,45 @@
+<div class="bg-background">
+  <div class="container-full">
+    <div class="page-container">
+      <div class="container container-xs">
+        <div class="card transparent p-sm">
+
+          <div class="card-heading">
+            <div class="text-center">
+              <img src="assets/img/ct-logo-w.png" />
+            </div>
+          </div>
+          <div class="card-body">
+            <!--
+            <h4>Crear cuenta</h4>
+            <h4><a [routerLink]="'/login'" >Ingresar</a></h4> -->
+
+            <div class="btn-group btn-group-justified" role="group">
+              <a class="btn btn-tab btn-transparent btn-text-white btn-lg active">Crear Cuenta</a>
+              <a class="btn btn-tab btn-transparent btn-text-white btn-lg " [routerLink]="'/login'">Ingresar</a>
+            </div>
+            <br>
+
+            <form class="formly" role="form" novalidate [formGroup]="form" (ngSubmit)="submit(user)">
+              <formly-form [model]="user" [fields]="userFields">
+                <button type="submit" class="btn btn-warning btn-lg btn-block">Crear cuenta</button>
+              </formly-form>
+            </form>
+
+
+
+          </div>
+
+          <div class="card-body">
+
+                <span class="spr">Registrandome acepto los terminos y condiciones</span>
+                <a href class="spr text-inherit">Terminos y condiciones</a><span class="spr">y</span><a href class="spr text-inherit">Privacidad</a>
+
+        </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

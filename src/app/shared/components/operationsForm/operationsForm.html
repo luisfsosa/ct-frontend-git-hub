@@ -1,0 +1,67 @@
+<div class="container-fluid custom-modal-container">
+  <form class="formly" role="form" novalidate [formGroup]="form" (ngSubmit)="saveOperation()">
+    <div class="custom-modal-header">
+      <h4 class="page-title"> <i class="fa fa-money"></i> Realizar {{formData.tipo_operacion}}</h4>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="well well-sm">
+          <strong>Razón:</strong> {{dataRFC[idx.nombre]}} <br/>
+          <strong>RFC:</strong> {{dataRFC[idx.rfc]}}
+        </div>
+      </div>
+      <div class="col-md-12">
+        <formly-form [model]="formData" [fields]="formFields" [form]="form" [options]="options">
+        </formly-form>
+      </div>
+    </div>
+  </form>
+
+  <div class="row">
+    <div class="col-md-12">
+        <div class="well well-sm" *ngIf="foundSelected(formData.detalles) == false">
+            <i class="fa fa-arrow-down" aria-hidden="true"></i> Para crear un {{formData.tipo_operacion}} debe selecionar los documentos a los que desea aplicar el movimiento
+        </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th><input type="checkbox" (change)="checkAll($event)"></th>
+            <th>Folio</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Monto</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let detalle of formData.detalles; let i = index" [ngClass]="{'selected':detalle[selectedIndex]}">
+            <td><input type="checkbox" [(ngModel)]="detalle[selectedIndex]"></td>
+            <td scope="row">{{detalle[idx.folio]}}</td>
+            <td>{{detalle[idx.fecha] | date: 'shortDate'}}</td>
+            <td>{{detalle[idx.total] | currency:'MXN':true}}</td>
+            <td><input [(ngModel)]="formData.detalles[i][lastItem].monto" type="text" /></td>
+            <!-- <td class="text-right"><button  class="btn btn-default btn-xs" (click)="removeItem(detalle)"><i class="fa fa-times text-danger"></i></button></td>  -->
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="active">
+            <td colspan="3">
+              <div class="text-right">Suma</div>
+            </td>
+
+            <td>{{totalSum(idx.total, formData.detalles) | currency:'MXN':true}}</td>
+            <td><strong>{{totalSelectedSum(lastItem, formData.detalles) | currency:'MXN':true}}</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-right">
+      <button type="submit" (click)="saveOperation()" class="btn btn-warning btn-lg">Realizar {{formData.tipo_operacion}}</button>
+      <a (click)="closeDialog()" class="btn btn-lg btn-default">Cancelar</a>
+    </div>
+  </div>
+
+</div>

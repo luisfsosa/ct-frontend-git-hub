@@ -1,0 +1,243 @@
+<div ng-controller="DashboardController as dash" class="container-fluid">
+
+
+  <div class="row home-indicators" *ngIf="Indicators">
+
+    <div class="col-md-4 col-sm-6 col-lg-3">
+      <div class="card bg-primary">
+        <div class="card-body pv">
+          <div class="clearfix">
+            <div class="pull-left">
+              <h5 class="m0 text-thin">Bienvenido a Central Topic<br> ​<small>Administrador</small></h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6 col-lg-3" *ngFor="let indicator of Indicators.content">
+      <div class="card">
+        <div class="card-body pv">
+          <div class="clearfix">
+            <div class="pull-left">
+
+              <div [ngSwitch]="indicator[1]">
+
+                <h5 class="m0 text-thin" *ngSwitchCase="'TCUSD'">{{'dashboard.indicators.' + indicator[1] | translate}} <br> ​<small>{{indicator[3] | currency:'MXN':true}}</small></h5>
+                <h5 class="m0 text-thin" *ngSwitchCase="'SMGAG'">{{'dashboard.indicators.' + indicator[1] | translate}} <br> ​<small>{{indicator[3] | currency:'MXN':true}}</small></h5>
+                <h5 class="m0 text-thin" *ngSwitchCase="'UMA_DIARIO'">{{'dashboard.indicators.' + indicator[1] | translate}} <br> ​<small>{{indicator[3] | currency:'MXN':true}}</small></h5>
+                <h5 class="m0 text-thin" *ngSwitchCase="'UMA_MENSUAL'">{{'dashboard.indicators.' + indicator[1] | translate}} <br> ​<small>{{indicator[3] | currency:'MXN':true}}</small></h5>
+                <h5 class="m0 text-thin" *ngSwitchCase="'UMA_ANUAL'">{{'dashboard.indicators.' + indicator[1] | translate}} <br> ​<small>{{indicator[3] | currency:'MXN':true}}</small></h5>
+
+                <h5 class="m0 text-thin" *ngSwitchDefault>{{'dashboard.indicators.' + indicator[1] | translate}} <br> ​<small>{{indicator[3]}}</small></h5>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="well text-center" *ngIf="!Indicators">
+    <h4>Cargando indicadores...</h4>
+  </div>
+
+
+
+  <div class="row">
+    <div class="col-lg-12 col-md-12">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-heading turquoise">
+              <!-- START dropdown-->
+              <div class="pull-right ">
+
+
+                <button class="btn btn-default btn-flat btn-flat-icon ripple " (click)="showFacturation = !showFacturation"><i class="fa fa-times"></i></button>
+
+              </div>
+              <div class="card-title">Facturación <small>Año 2017</small></div>
+
+            </div>
+            <div class="card-body" *ngIf="showFacturation">
+
+
+              <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+                      [chartType]="barChartType" [colors]="barChartColors" (chartClick)="chartClicked($event)"></canvas>
+
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-heading alt">
+              <div class="card-title">Cuentas por Cobrar y Pagar</div>
+            </div>
+            <div class="card-body">
+
+              <canvas baseChart [datasets]="barChartData2" [labels]="barChartLabels2" [options]="barChartOptions2" [legend]="barChartLegend2"
+                      [chartType]="barChartType" [colors]="barChartColors" (chartClick)="chartClicked($event)"></canvas>
+
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-heading turquoise">
+              <!-- START dropdown-->
+              <div dropdown class="pull-right dropdown">
+                <button type="button" dropdownToggle class="btn btn-default btn-flat btn-flat-icon ripple">
+                  <em class="ion-android-more-vertical"></em>
+                </button>
+                <ul *dropdownMenu role="menu" class="dropdown-menu md-dropdown-menu dropdown-menu-right">
+                  <li><a>Año 2017</a></li>
+                  <li><a>Año 2016</a></li>
+                  <li><a>6 Meses</a></li>
+                </ul>
+              </div>
+              <!-- END dropdown-->
+              <div class="card-title">IVA <small>Año 2017</small></div>
+            </div>
+            <div class="card-body">
+
+
+              <canvas baseChart width="400" height="200" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+                      [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)"
+                      (chartClick)="chartClicked($event)"></canvas>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-heading alt">
+              <div class="card-title">ISR <small>Año 2017</small></div>
+            </div>
+            <div class="card-body">
+
+              <canvas baseChart width="400" height="200" [datasets]="lineChartDataISR" [labels]="lineChartLabelsISR" [options]="lineChartOptions"
+                      [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-heading alt">
+              <div class="card-title">Ultimos XML's Agregados <i class="ion-upload"></i></div>
+            </div>
+            <!-- START table-responsive-->
+            <div class="table-responsive table-striped table-bordered table-condensed">
+              <table class="table">
+                <thead>
+                <tr>
+                  <th>SAT</th>
+                  <th>PDF</th>
+                  <th>XML</th>
+                  <th>Tipo</th>
+                  <th>F Entrada</th>
+                  <th>F Factura</th>
+                  <th>Nombre</th>
+                  <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td class="va-middle"><span class="badge bg-green-500"><i class="ion-checkmark-circled"></i></span></td>
+                  <td class="va-middle"><span class="badge bg-grey-500"><i class="ion-android-document"></i></span></td>
+                  <td class="va-middle"><span class="badge bg-blue-500"><i class="ion-document-text"></i></span></td>
+                  <td class="va-middle">
+                    Egreso
+                  </td>
+                  <td class="va-middle">04/04/2017</td>
+                  <td class="va-middle">01/04/2017</td>
+                  <td class="va-middle">ESPACIOS DE MEXICO S.A. DE C.V. <br/> -ESPACIOS DE MEXICO S.A. DE C.V.</td>
+                  <td class="va-middle">$8,352.00</td>
+                </tr>
+
+                <tr>
+                  <td class="va-middle"><span class="badge bg-green-500"><i class="ion-checkmark-circled"></i></span></td>
+                  <td class="va-middle"><span class="badge bg-grey-500"><i class="ion-android-document"></i></span></td>
+                  <td class="va-middle"><span class="badge bg-blue-500"><i class="ion-document-text"></i></span></td>
+                  <td class="va-middle">
+                    Egreso
+                  </td>
+                  <td class="va-middle">04/04/2017</td>
+                  <td class="va-middle">01/04/2017</td>
+                  <td class="va-middle">BEST BUY STORES S. DE R.L. DE C.V. <br> -BEST BUY STORES S. DE R.L. DE C.V.</td>
+                  <td class="va-middle">$8,352.00</td>
+                </tr>
+
+
+                <tr>
+                  <td class="va-middle"><span class="badge bg-green-500"><i class="ion-checkmark-circled"></i></span></td>
+                  <td class="va-middle"><span class="badge bg-grey-500"><i class="ion-android-document"></i></span></td>
+                  <td class="va-middle"><span class="badge bg-blue-500"><i class="ion-document-text"></i></span></td>
+                  <td class="va-middle">
+                    Egreso
+                  </td>
+                  <td class="va-middle">04/04/2017</td>
+                  <td class="va-middle">01/04/2017</td>
+                  <td class="va-middle">SIETI SA DE CV</td>
+                  <td class="va-middle">$8,352.00</td>
+                </tr>
+
+
+                <tr>
+                  <td class="va-middle"><span class="badge bg-green-500"><i class="ion-checkmark-circled"></i></span></td>
+                  <td class="va-middle"><span class="badge bg-grey-500"><i class="ion-android-document"></i></span></td>
+                  <td class="va-middle"><span class="badge bg-blue-500"><i class="ion-document-text"></i></span></td>
+                  <td class="va-middle">
+                    Egreso
+                  </td>
+                  <td class="va-middle">04/04/2017</td>
+                  <td class="va-middle">01/04/2017</td>
+                  <td class="va-middle">ANCESTRAL BOTANICAL S DE RL DE CV-ANCESTRAL BOTANICAL S DE RL DE CV</td>
+                  <td class="va-middle">$8,352.00</td>
+                </tr>
+
+
+                <tr>
+                  <td class="va-middle"><span class="badge bg-green-500"><i class="ion-checkmark-circled"></i></span></td>
+                  <td class="va-middle"><span class="badge bg-grey-500"><i class="ion-android-document"></i></span></td>
+                  <td class="va-middle"><span class="badge bg-blue-500"><i class="ion-document-text"></i></span></td>
+                  <td class="va-middle">
+                    Egreso
+                  </td>
+                  <td class="va-middle">04/04/2017</td>
+                  <td class="va-middle">01/04/2017</td>
+                  <td class="va-middle">C G MALLAS SA DE CV-C G MALLAS SA DE CV</td>
+                  <td class="va-middle">$8,352.00</td>
+                </tr>
+
+
+
+                </tbody>
+              </table>
+            </div>
+            <!-- END table-responsive-->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

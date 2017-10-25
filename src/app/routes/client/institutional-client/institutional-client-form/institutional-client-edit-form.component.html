@@ -1,0 +1,25 @@
+<div class="container-fluid custom-modal-container">
+  <button type="button" class="close" aria-label="Close" (click)="closeDialog()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <form class="formly" role="form" novalidate [formGroup]="form" (ngSubmit)="saveForm(formData)">
+  <div class="custom-modal-header">
+    <h4 class="page-title"> Editar Cliente Institucional</h4>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+        <formly-form [model]="formData" [fields]="userFields" [form]="form" [options]="options">
+        </formly-form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 text-right">
+      <button type="submit" class="btn btn-warning btn-lg" [disabled]="!form.valid">Guardar</button>
+      <a (click)="closeDialog()" class="btn btn-lg btn-default">Cancelar</a>
+    </div>
+
+  </div>
+ </form>
+</div>

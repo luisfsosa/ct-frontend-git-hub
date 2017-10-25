@@ -1,0 +1,378 @@
+<div class="container-fluid custom-modal-container" xmlns="http://www.w3.org/1999/html">
+  <button type="button" class="close" aria-label="Close" (click)="closeDialog()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+  <table width="100%" style="padding-left:30px; padding-right:30px;">
+    <tbody>
+      <tr>
+        <td align="left">
+          <img src="assets/img/quo-logo.png">
+        </td>
+        <td align="center">
+          <table >
+            <tbody>
+            <tr>
+              <th align="left" class="h3" style="width: 300px; background: #0C2D9B; color: #FFFFFF;">Serie </th>
+              <td style="width: 50px;"><br></td>
+              <td align="right">{{comprobante['@serie']}}</td>
+            </tr>
+            <tr>
+              <th align="left" class="h3" style=" width: 300px; background: #0C2D9B; color: #FFFFFF;">Folio </th>
+              <td style="width: 50px;"><br></td>
+              <td align="right">{{comprobante['@folio']}}</td>
+            </tr>
+            <tr>
+              <th align="left" class="h3" style="width: 300px; background: #0C2D9B; color: #FFFFFF;">Fecha </th>
+              <td style="width: 50px;"><br></td>
+              <td align="right">{{comprobante['@fecha']}}</td>
+            </tr>
+            <tr>
+              <th align="left" class="h3" style="width: 300px; background: #0C2D9B; color: #FFFFFF;">Lugar de Expedición </th>
+              <td style="width: 50px;"><br></td>
+              <td align="right" class="h6">{{comprobante['@LugarExpedicion']}}</td>
+            </tr>
+            <tr>
+              <th align="left" class="h3" style="width: 300px; background: #0C2D9B; color: #FFFFFF;">Moneda  </th>
+              <td style="width: 50px;"><br></td>
+              <td align="right">{{comprobante['@Moneda']}}</td>
+            </tr>
+            <tr>
+              <th align="left" class="h3" style="width: 300px; background: #0C2D9B; color: #FFFFFF;">Tipo de cambio  </th>
+              <td style="width: 50px;"><br></td>
+              <td align="right">{{comprobante['@TipoCambio']}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td width="50%" *ngIf="comprobante['cfdi:Emisor']">
+          <table width="100%">
+            <tbody>
+            <tr>
+              <th colspan="2" class="h3" style="width: 630px; background: #0C2D9B; color: #FFFFFF;">Emisor</th>
+            </tr>
+            <tr>
+              <th align="center">RFC</th>
+              <td>{{comprobante['cfdi:Emisor']['@rfc'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <th align="center">Nombre</th>
+              <td class="h6">{{comprobante['cfdi:Emisor']['@nombre'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <th align="center">Régimen Fiscal</th>
+              <td>{{comprobante['cfdi:Emisor']['cfdi:RegimenFiscal']['@Regimen']| uppercase }}</td>
+            </tr>
+            <tr>
+              <th colspan="2" class="h2" style="color: #000000; border-bottom:2; border-bottom-style:ridge">Domicilio</th>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Emisor']['cfdi:DomicilioFiscal']['@calle'] | uppercase}}
+               </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Emisor']['cfdi:DomicilioFiscal']['@colonia'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Emisor']['cfdi:DomicilioFiscal']['@municipio'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Emisor']['cfdi:DomicilioFiscal']['@municipio'] | uppercase}}
+                C.P.&nbsp;{{comprobante['cfdi:Emisor']['cfdi:DomicilioFiscal']['@codigoPostal'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Emisor']['cfdi:DomicilioFiscal']['@estado'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Emisor']['cfdi:DomicilioFiscal']['@pais'] | uppercase}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </td>
+        <td width="50%" *ngIf="comprobante['cfdi:Receptor']">
+          <table width="100%">
+            <tbody><tr>
+              <th colspan="2" class="h3" style="width: 630px; background: #0C2D9B; color: #FFFFFF;">Receptor</th>
+            </tr>
+            <tr>
+              <th align="center">RFC</th>
+              <td>{{comprobante['cfdi:Receptor']['@rfc'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <th align="center">Nombre</th>
+              <td class="h6">{{comprobante['cfdi:Receptor']['@nombre'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <th align="center">&nbsp;</th>
+              <td>
+                &nbsp;
+              </td>
+            </tr>
+            <tr>
+              <th colspan="2" class="h2" style="color: #000000; border-bottom:2; border-bottom-style:ridge">Domicilio</th>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Receptor']['cfdi:Domicilio']['@calle'] | uppercase}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Receptor']['cfdi:Domicilio']['@colonia'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Receptor']['cfdi:Domicilio']['@municipio'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Receptor']['cfdi:Domicilio']['@municipio'] | uppercase}}
+                C.P.&nbsp;{{comprobante['cfdi:Receptor']['cfdi:Domicilio']['@codigoPostal'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Receptor']['cfdi:Domicilio']['@estado'] | uppercase}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                &nbsp;{{comprobante['cfdi:Receptor']['cfdi:Domicilio']['@pais'] | uppercase}}</td>
+            </tr>
+            </tbody></table>
+        </td>
+      </tr>
+    <tr>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <table class="table table-bordered table-striped" *ngIf="comprobante['cfdi:Conceptos']">
+  <tbody>
+  <tr>
+    <th style="width: 60px;  color: #000000; border-bottom:2; border-bottom-style:ridge" align="right">Cantidad</th>
+    <th style="width: 120px;  color: #000000; border-bottom:2; border-bottom-style:ridge" align="left">Unidad de Medida</th>
+    <th style="width: 560px; color: #000000; border-bottom:2; border-bottom-style:ridge" align="left">Descripcion</th>
+    <th style="width: 100px;  color: #000000; border-bottom:2; border-bottom-style:ridge" align="right">Precio</th>
+    <th style="width: 100px;  color: #000000; border-bottom:2; border-bottom-style:ridge" align="right">Importe</th>
+  </tr>
+
+  <tr *ngFor="let item of comprobante['cfdi:Conceptos']['cfdi:Concepto']">
+    <td align="right"><span title="Cantidad">{{item['@cantidad']}}</span></td>
+    <td align="right"><span title="Unidad de Medida">{{item['@unidad']}}</span></td>
+    <td align="right"><span title="Descripcion">{{item['@descripcion']}}</span></td>
+    <td align="right"><span title="Precio">{{item['@valorUnitario'] | currency:'MXN':true}}</span></td>
+    <td align="right"><span title="Importe">{{item['@importe'] | currency:'MXN':true}}</span></td>
+  </tr>
+  </tbody>
+  </table>
+
+
+  <table class="table table-bordered table-striped">
+    <tbody>
+    <tr>
+      <td style="width: 660px;">
+        &nbsp;
+      </td>
+      <td style="width: 80px; background: #0C2D9B; color: #FFFFFF;" align="right">
+        SubTotal
+      </td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">
+      </td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">
+        {{comprobante['@subtotal'] | currency:'MXN':true}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <table class="table table-bordered table-striped" *ngIf="comprobante['cfdi:Impuestos']['cfdi:Traslados']['cfdi:Traslado']['@importe']">
+    <tbody>
+    <tr>
+      <td style="width: 660px;">
+        &nbsp;
+      </td>
+      <td style="width: 80px; background: #0C2D9B; color: #FFFFFF;" align="right">{{comprobante['cfdi:Impuestos']['cfdi:Traslados']['cfdi:Traslado']['@impuesto']}} Traslado</td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">{{comprobante['cfdi:Impuestos']['cfdi:Traslados']['cfdi:Traslado']['@tasa']}} %</td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">{{comprobante['cfdi:Impuestos']['cfdi:Traslados']['cfdi:Traslado']['@importe'] | currency:'MXN':true}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <table class="table table-bordered table-striped" *ngIf="comprobante['cfdi:Impuestos']['cfdi:Retenciones'] && comprobante['cfdi:Impuestos']['cfdi:Retenciones']['cfdi:Retencion']['@importe']">
+    <tbody>
+    <tr>
+      <td style="width: 660px;">
+        &nbsp;
+      </td>
+      <td style="width: 80px; background: #0C2D9B; color: #FFFFFF;" align="right">{{comprobante['cfdi:Impuestos']['cfdi:Retenciones']['cfdi:Retencion']['@impuesto']}} Retención</td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">{{comprobante['cfdi:Impuestos']['cfdi:Retenciones']['cfdi:Retencion']['@tasa']}} %</td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">{{comprobante['cfdi:Impuestos']['cfdi:Retenciones']['cfdi:Retencion']['@importe'] | currency:'MXN':true}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <table class="table table-bordered table-striped" *ngIf="!comprobante['cfdi:Impuestos']['cfdi:Traslados']['cfdi:Traslado']['@importe']">
+    <tbody *ngFor="let item of comprobante['cfdi:Impuestos']['cfdi:Traslados']['cfdi:Traslado']">
+    <tr>
+      <td style="width: 660px;">
+        &nbsp;
+      </td>
+      <td style="width: 80px; background: #0C2D9B; color: #FFFFFF;" align="right">{{item['@impuesto']}} Traslado</td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">{{item['@tasa']}}</td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">{{item['@importe'] | currency:'MXN':true}}</td>
+    </tr>
+    <tr>
+      <td style="width: 940px;" colspan="4">
+        &nbsp;
+      </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td style="width: 660px;">
+        &nbsp;
+      </td>
+      <td style="width: 80px; background: #0C2D9B; color: #FFFFFF;" align="right">Total Impuestos Traslados</td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right"></td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">
+        {{comprobante['cfdi:Impuestos']['@totalImpuestosTrasladados'] | currency:'MXN':true}}</td>
+    </tr>
+    </tfoot>
+  </table>
+
+  <table class="table table-bordered table-striped" *ngIf="comprobante['cfdi:Impuestos']['cfdi:Retenciones'] && !comprobante['cfdi:Impuestos']['cfdi:Retenciones']['cfdi:Retencion']['@importe']">
+    <tbody *ngFor="let item of comprobante['cfdi:Impuestos']['cfdi:Retenciones']['cfdi:Retencion']">
+    <tr>
+      <td style="width: 660px;">
+        &nbsp;
+      </td>
+      <td style="width: 80px; background: #0C2D9B; color: #FFFFFF;" align="right">{{item['@impuesto']}} Retención</td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">{{item['@tasa']}}</td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">{{item['@importe'] | currency:'MXN':true}}</td>
+    </tr>
+    <tr>
+      <td style="width: 940px;" colspan="4">
+        &nbsp;
+      </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td style="width: 660px;">
+        &nbsp;
+      </td>
+      <td style="width: 80px; background: #0C2D9B; color: #FFFFFF;" align="right">Total Impuestos Retenidos</td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right"></td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">
+        {{comprobante['cfdi:Impuestos']['@totalImpuestosRetenidos'] | currency:'MXN':true}}</td>
+    </tr>
+    </tfoot>
+  </table>
+
+
+  <table class="table table-bordered table-striped" *ngIf="comprobante['@descuento']">
+    <tbody>
+    <tr>
+      <td style="width: 660px;">
+        &nbsp;
+      </td>
+      <td style="width: 80px; background: #0C2D9B; color: #FFFFFF;" align="right">
+        Descuento
+      </td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">
+      </td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">
+        {{comprobante['@descuento'] | currency:'MXN':true}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered table-striped">
+    <tbody>
+    <tr>
+      <td style="width: 660px;">
+        &nbsp;
+      </td>
+      <td style="width: 80px; background: #0C2D9B; color: #FFFFFF;" align="right">
+        Total
+      </td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">
+      </td>
+      <td style="width: 100px; background: #B6B6B6; color: #000000;" align="right">
+        {{comprobante['@total'] | currency:'MXN':true}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered table-striped">
+    <tbody>
+    <tr>
+      <td style="width: 470px;">
+        Condiciones de Pago: {{comprobante['@condicionesDePago']}}</td>
+      <td style="width: 470px;">
+        Forma de Pago: {{comprobante['@formaPago']}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <div style="overflow-x: auto; overflow-y: auto;">
+    <table class="table table-bordered table-striped">
+      <tbody><tr>
+        <th colspan="8">Sello CFD</th>
+      </tr>
+      <tr>
+        <td colspan="8" style="border-bottom:1; border-bottom-style:ridge; font-size:smaller">{{comprobante['cfdi:Complemento']['tfd:TimbreFiscalDigital']['@selloCFD']}}</td>
+      </tr>
+      <tr>
+        <th colspan="8">Sello SAT</th>
+      </tr>
+      <tr>
+        <td colspan="8" style="border-bottom:1; border-bottom-style:ridge; font-size:smaller">{{comprobante['cfdi:Complemento']['tfd:TimbreFiscalDigital']['@selloSAT']}}</td>
+      </tr>
+      <tr>
+        <td style="width:200px; padding-right:5px; text-align:right; font-weight:bold;">
+          Número Certificado Emisor:
+        </td>
+        <td align="left" width="280px">{{comprobante['@noCertificado']}}</td>
+        <td style="width:100px; padding-right:5px; text-align:right; font-weight:bold;">
+          Folio Fiscal:
+        </td>
+        <td align="left" width="280px">{{comprobante['cfdi:Complemento']['tfd:TimbreFiscalDigital']['@UUID']}}</td>
+      </tr>
+      <tr>
+        <td style="width:120px; padding-right:5px; text-align:right; font-weight:bold;">
+          Fecha Timbrado:
+        </td>
+        <td align="left" width="150px">{{comprobante['cfdi:Complemento']['tfd:TimbreFiscalDigital']['@fechaTimbrado']}}</td>
+        <td style="width:140px; padding-right:5px; text-align:right; font-weight:bold;">
+          No Certificado SAT:
+        </td>
+        <td align="left" width="165px">{{comprobante['cfdi:Complemento']['tfd:TimbreFiscalDigital']['@noCertificadoSAT']}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+    Este documento es una representación impresa de un CFDI
+
+  <div class="row">
+    <div class="col-md-6 text-right">
+      <a (click)="closeDialog()" class="btn btn-warning btn-lg">Cerrar</a>
+    </div>
+  </div>
+</div>
+

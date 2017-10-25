@@ -1,0 +1,115 @@
+<div class="bg-background">
+  <div class="container container-md">
+    <div class="text-center p-lg">
+      <img src="assets/img/ct-logo-w.png" />
+      <br>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <wizard #wizard navBarLayout="large-empty-symbols">
+          <wizard-step title="Datos Contacto" navigationSymbol="1">
+            <div class="p-lg">
+
+              <form class="formly " role="form" novalidate [formGroup]="personalDataForm" (ngSubmit)="submitUser(personalData)">
+                <formly-form [model]="personalData" [fields]="personalDataFields">
+                  <button class="btn btn-warning btn-lg pull-right" type="submit" nextStep>Siguiente Paso <span class="fa fa-chevron-right"></span></button>
+                  <!-- <button type="submit" class="btn btn-warning btn-lg btn-block">Crear cuenta</button> -->
+                </formly-form>
+              </form>
+
+            </div>
+
+            <!-- <button type="button" goToStep="2" (finalize)="nextIsValid()">Go directly to third Step</button> -->
+          </wizard-step>
+          <wizard-step title="Datos Fiscales" navigationSymbol="2">
+            <div class="p-lg">
+              <div class="text-center">
+                <span class="btn btn-success btn-file">
+                      <i class="fa fa-upload"></i>  Importar información desde XML <input type="file" #file (change)="onChangeFile($event)">
+                    </span>
+              </div>
+              <br>
+              <br>
+              <ul class="nav nav-pills nav-stacked">
+                <li *ngFor="let item of importedXMLData">
+                  <a (click)="selectRFC(item)">
+                          <strong>{{item.rfc}}</strong> - {{item.nombre}}
+                      </a>
+                </li>
+              </ul>
+              <br/>
+              <hr>
+              <form class="formly " role="form" novalidate (ngSubmit)="submitUser(personalData)">
+                <div class="form-group">
+                  <div *ngIf="fiscalData && fiscalData.rfc">
+                    <label>
+                           <span *ngIf="fiscalData.rfc.length == 13"><i class="fa fa-check text-success" aria-hidden="true"></i> Persona Fisica</span>
+                           <span *ngIf="fiscalData.rfc.length == 12"><i class="fa fa-check text-success" aria-hidden="true"></i> Persona Moral</span>
+                        </label>
+                  </div>
+                </div>
+
+                <formly-form [model]="fiscalData" [fields]="fiscalDataFields" [form]="fiscalDataForm">
+                  <button class="btn btn-default btn-lg" type="button" previousStep>
+                              <span class="fa fa-chevron-left"></span>
+                            Regresar</button>
+                  <button class="btn btn-warning btn-lg pull-right" type="submit" nextStep>Siguiente
+
+                            <span class="fa fa-chevron-right"></span>
+                        </button>
+                  <!-- <button type="submit" class="btn btn-warning btn-lg btn-block">Crear cuenta</button> -->
+                </formly-form>
+              </form>
+            </div>
+          </wizard-step>
+          <!-- <wizard-step title="Datos de Pago" navigationSymbol="3">
+            <div class="p-lg">
+              <h4> <i class="fa fa-credit-card"></i> Tarjeta de crédito</h4>
+              <form class="formly " role="form" novalidate [formGroup]="paymentDataForm" (ngSubmit)="submitUser(personalData)">
+                <formly-form [model]="paymentData" [fields]="paymentDataFields">
+                  <button class="btn btn-default btn-lg" type="button" previousStep>
+                          <span class="fa fa-chevron-left"></span>
+                          Regresar</button>
+                  <button class="btn btn-warning btn-lg pull-right" type="submit" nextStep>Guardar y Continuar <span class="fa fa-chevron-right"></span></button>
+                </formly-form>
+              </form>
+            </div>
+          </wizard-step> -->
+
+          <wizard-completion-step title="Guia rápida" navigationSymbol="3">
+
+            <div class="p-lg">
+              <div class="text-center">
+                <h2 class="p0 m0"><i class="text-success ion-android-checkmark-circle"></i></h2>
+                <h4 class="p0 m0">
+                  Excelente! gracias por completar tu información</h4>
+                <br/>
+                <a [routerLink]="'/login'" class="btn btn-lg btn-warning">Ir al panel principal</a>
+              </div>
+            </div>
+            <hr>
+            <div class="p-md">
+              <div class="text-center">
+                <h4>Nuestra videoteca de ayuda</h4>
+              </div>
+              <div class="row">
+                <div class="col-sm-4" *ngFor="let video of getVimeoVideos().data">
+                  <div class="card">
+                    <div class="card-item"><img alt="MaterialImg" class="fw img-responsive" src="{{video.pictures.sizes[3].link}}">
+                    </div>
+                    <div class="card-body">
+                      <strong class="m0">{{video.name}}</strong>
+                      <p class="m0"><span class="mr-sm text-muted">by</span><a href="">{{video.user.name}}</a></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </wizard-completion-step>
+
+        </wizard>
+      </div>
+    </div>
+  </div>
+</div>

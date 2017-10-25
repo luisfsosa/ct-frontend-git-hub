@@ -1,0 +1,260 @@
+<div class="container-fluid">
+
+  <h4 class="page-title">Parámetros</h4>
+
+  <h5 class="page-title">Parámetros Globales</h5>
+
+  <div class="panel">
+    <div class="panel-body table-actions">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control col-md-6 input-sm" [(ngModel)]="termGlobal" placeholder="Buscar">
+            <span class="fa fa-search form-control-feedback"></span>
+          </div>
+        </div>
+
+        <div class="col-md-8" *userAction="['SUPER_USUARIO']">
+          <div class="pull-right">
+            <button class="btn btn-sm btn-default" (click)="addGSetting()">
+              <span class="fa fa-plus text-primary"></span>
+              Añadir Nuevo Parámetro Global
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default" *userAction="['SUPER_USUARIO']">
+    <div class="table-responsive, infinite-scroll" data-infinite-scroll>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th *ngFor="let field of dataGlobal.columns; let i = index">
+              <div [ngSwitch]="field">
+                {{ 'tables.headers.' + field | translate }}
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let item of dataGlobal.content | filter: termGlobal | slice:0:1000; let i = index"
+            [class.active]="i == selectedRow" [contextMenu]="ParametroGlobal" [contextMenuSubject]="item">
+          <td *ngFor="let field of dataGlobal.columns;">
+            <div [ngSwitch]="field">
+              <span *ngSwitchCase="'id'" class="{{field}}" title="{{item[0]}}">{{item[0]}}</span>
+              <span *ngSwitchCase="'codigo_parametro'" class="{{field}}" title="{{item[5]}}">{{item[5]}}</span>
+              <span *ngSwitchCase="'valor'" class="{{field}}" title="{{item[6]}}">{{item[6]}}</span>
+              <span *ngSwitchCase="'permite_sobreescritura'" class="{{field}}" title="{{item[7]}}">{{item[7] | questionableBoolean}}</span>
+              <span *ngSwitchCase="'tipo_parametro'" class="{{field}}" title="{{item[8]}}">{{item[8]}}</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel panel-default" *userAction="['CUENTA_MAESTRA']">
+    <div class="table-responsive, infinite-scroll" data-infinite-scroll>
+      <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th *ngFor="let field of dataGlobal.columns; let i = index">
+            <div [ngSwitch]="field">
+              {{ 'tables.headers.' + field | translate }}
+            </div>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let item of dataGlobal.content | filter: termGlobal | slice:0:1000; let i = index"
+            [class.active]="i == selectedRow">
+          <td *ngFor="let field of dataGlobal.columns;">
+            <div [ngSwitch]="field">
+              <span *ngSwitchCase="'id'" class="{{field}}" title="{{item[0]}}">{{item[0]}}</span>
+              <span *ngSwitchCase="'codigo_parametro'" class="{{field}}" title="{{item[5]}}">{{item[5]}}</span>
+              <span *ngSwitchCase="'valor'" class="{{field}}" title="{{item[6]}}">{{item[6]}}</span>
+              <span *ngSwitchCase="'permite_sobreescritura'" class="{{field}}" title="{{item[7]}}">{{item[7] | questionableBoolean}}</span>
+              <span *ngSwitchCase="'tipo_parametro'" class="{{field}}" title="{{item[8]}}">{{item[8]}}</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <h5 class="page-title">Parámetros Despacho</h5>
+
+  <div class="panel">
+    <div class="panel-body table-actions">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control col-md-6 input-sm" [(ngModel)]="termDispatching" placeholder="Buscar">
+            <span class="fa fa-search form-control-feedback"></span>
+          </div>
+        </div>
+
+        <div class="col-md-8" *userAction="['SUPER_USUARIO','CUENTA_MAESTRA']">
+          <div class="pull-right">
+
+            <button class="btn btn-sm btn-default" (click)="addDSetting()">
+              <span class="fa fa-plus text-primary"></span>
+              Añadir Nuevo Parámetro Despacho
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="panel panel-default" *userAction="['SUPER_USUARIO','CUENTA_MAESTRA']">
+    <div class="table-responsive, infinite-scroll" data-infinite-scroll>
+      <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th *ngFor="let field of dataDispatching.columns; let i = index">
+            {{ 'tables.headers.' + field | translate }}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let item of dataDispatching.content | filter: termDispatching | slice:0:1000; let i = index"
+            [class.active]="i == selectedRow" [contextMenu]="ParametroDespacho" [contextMenuSubject]="item">
+          <td *ngFor="let field of dataDispatching.columns; let i = index">
+            <div [ngSwitch]="field">
+              <span *ngSwitchCase="'id'" class="{{field}}" title="{{item[0]}}">{{item[0]}}</span>
+              <span *ngSwitchCase="'codigo_parametro'" class="{{field}}" title="{{item[5]}}">{{item[5]}}</span>
+              <span *ngSwitchCase="'valor'" class="{{field}}" title="{{item[6]}}">{{item[6]}}</span>
+              <span *ngSwitchCase="'permite_sobreescritura'" class="{{field}}" title="{{item[7]}}">{{item[7] | questionableBoolean}}</span>
+              <span *ngSwitchCase="'tipo_parametro'" class="{{field}}" title="{{item[8]}}">{{item[8]}}</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel panel-default" *userAction="['CONTADOR']">
+    <div class="table-responsive, infinite-scroll" data-infinite-scroll>
+      <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th *ngFor="let field of dataDispatching.columns; let i = index">
+            {{ 'tables.headers.' + field | translate }}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let item of dataDispatching.content | filter: termDispatching | slice:0:1000; let i = index"
+            [class.active]="i == selectedRow">
+          <td *ngFor="let field of dataDispatching.columns; let i = index">
+            <div [ngSwitch]="field">
+              <span *ngSwitchCase="'id'" class="{{field}}" title="{{item[0]}}">{{item[0]}}</span>
+              <span *ngSwitchCase="'codigo_parametro'" class="{{field}}" title="{{item[5]}}">{{item[5]}}</span>
+              <span *ngSwitchCase="'valor'" class="{{field}}" title="{{item[6]}}">{{item[6]}}</span>
+              <span *ngSwitchCase="'permite_sobreescritura'" class="{{field}}" title="{{item[7]}}">{{item[7] | questionableBoolean}}</span>
+              <span *ngSwitchCase="'tipo_parametro'" class="{{field}}" title="{{item[8]}}">{{item[8]}}</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <h5 class="page-title">Parámetros RFC</h5>
+
+  <div class="panel">
+    <div class="panel-body table-actions">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control col-md-6 input-sm" [(ngModel)]="termRfc" placeholder="Buscar">
+            <span class="fa fa-search form-control-feedback"></span>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="pull-right">
+            <button class="btn btn-sm btn-default" (click)="addRSetting()">
+              <span class="fa fa-plus text-primary"></span>
+              Añadir Nuevo Parámetro RFC
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="panel panel-default">
+    <div class="table-responsive, infinite-scroll" data-infinite-scroll>
+      <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th *ngFor="let field of dataRfc.columns; let i = index">
+            {{ 'tables.headers.' + field | translate }}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let item of dataRfc.content | filter: termRfc | slice:0:1000; let i = index"
+            [class.active]="i == selectedRow" [contextMenu]="ParametroRfc" [contextMenuSubject]="item">
+          <td *ngFor="let field of dataRfc.columns; let i = index">
+            <div [ngSwitch]="field">
+              <span *ngSwitchCase="'id'" class="{{field}}" title="{{item[0]}}">{{item[0]}}</span>
+              <span *ngSwitchCase="'codigo_parametro'" class="{{field}}" title="{{item[5]}}">{{item[5]}}</span>
+              <span *ngSwitchCase="'valor'" class="{{field}}" title="{{item[6]}}">{{item[6]}}</span>
+              <span *ngSwitchCase="'permite_sobreescritura'" class="{{field}}" title="{{item[7]}}">{{item[7] | questionableBoolean}}</span>
+              <span *ngSwitchCase="'tipo_parametro'" class="{{field}}" title="{{item[8]}}">{{item[8]}}</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <context-menu #ParametroGlobal>
+    <ng-template let-item contextMenuItem (execute)="updateGlobal($event.item)">
+      <i class="fa fa-pencil text-primary" aria-hidden="true"></i> Editar
+    </ng-template>
+
+    <ng-template contextMenuItem (execute)="removeGlobal($event.item,dataGlobal.content)">
+      <i class="fa fa-times text-danger" aria-hidden="true"></i> Borrar
+    </ng-template>
+  </context-menu>
+
+  <context-menu #ParametroDespacho >
+    <ng-template let-item contextMenuItem (execute)="updateDispaching($event.item)">
+      <i class="fa fa-pencil text-primary" aria-hidden="true"></i> Editar
+    </ng-template>
+
+    <ng-template contextMenuItem (execute)="removeDispaching($event.item,dataDispatching.content)">
+      <i class="fa fa-times text-danger" aria-hidden="true"></i> Borrar
+    </ng-template>
+  </context-menu>
+
+  <context-menu #ParametroRfc>
+    <ng-template let-item contextMenuItem (execute)="updateRfc($event.item)">
+      <i class="fa fa-pencil text-primary" aria-hidden="true"></i> Editar
+    </ng-template>
+
+    <ng-template contextMenuItem (execute)="removeRfc($event.item,dataRfc.content)">
+      <i class="fa fa-times text-danger" aria-hidden="true"></i> Borrar
+    </ng-template>
+  </context-menu>
+
+</div>

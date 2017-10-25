@@ -1,0 +1,69 @@
+<div class="container-fluid custom-modal-container">
+  <button type="button" class="close" aria-label="Close" (click)="closeDialog()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+  <h4 class="page-title">Detalles de Factura</h4>
+
+  <div class="row">
+    <div class="col-md-12">
+      <formly-form [model]="formData" [fields]="userFields" [form]="form" [options]="options">
+      </formly-form>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-body table-actions">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control col-md-6 input-sm" [(ngModel)]="termDetail" placeholder="Buscar">
+            <span class="fa fa-search form-control-feedback"></span>
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="pull-right">
+            <button class="btn btn-sm btn-success" (click)="clasify()">
+              <span class="fa fa-arrow-up text-primary"></span>Clasificar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead>
+
+        <tr>
+          <th><input type="checkbox" name="all" [checked]="isAllChecked()" (change)="checkAll($event)" /></th>
+          <th *ngFor="let field of dataDetail.columns; let i = index">
+            {{ 'tables.headers.' + field | translate }}
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let item of dataDetail.content | filter: termDetail | slice:0:1000; let i = index"
+            [class.active]="i == selectedRow" [class.active]="item[totalColumns]">
+          <td><input type="checkbox" [(ngModel)]="item[totalColumns]"></td>
+          <td *ngFor="let field of dataDetail.columns; let i = index">
+            <div [ngSwitch]="field">
+              <span *ngSwitchDefault class="{{field}}" title="{{item[i]}}">{{item[i]}}</span>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 text-right">
+      <a (click)="closeDialog()" class="btn btn-warning btn-lg">Cerrar</a>
+    </div>
+  </div>
+</div>
+

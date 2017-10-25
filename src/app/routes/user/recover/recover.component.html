@@ -1,0 +1,52 @@
+<div class="bg-background">
+    <div class="container-full">
+    <div class="page-container">
+        <div class="container container-xs">
+
+
+
+            <div *ngIf="mailSent" class="card bg-success">
+                <div class="card-heading"><em class="ion-checkmark-round pull-right icon-lg"></em>
+                    <h4 class="mt0">Email enviado!</h4>
+                </div>
+                <div class="card-body">
+                    <p>Por favor ingresa a tu cuenta de correo y revisa tu bandeja para seguir las instrucciones de como restablecer tu contraseña.</p>
+                </div>
+                <div class="card-footer text-right">
+                    <a [routerLink]="'/login'" class="btn btn-success btn-flat text-white">Ingresar<em class="ion-ios-arrow-thin-right icon-fw"></em></a>
+                </div>
+            </div>
+            <form [formGroup]="recForm" class="card transparent form-validate" *ngIf="!mailSent" (submit)="submitForm($event, recForm)" novalidate>
+                <br>
+                <div class="text-center">
+                <img src="assets/img/ct-logo-w.png" />
+            </div>
+
+                <div class="card-heading">
+                    <p class="text-center text-inherit">Ingresa tu email y sigue los pasos en tu bandeja de email para reingresar to contraseña.</p>
+                </div>
+                <div class="card-offset pb0">
+                    <div *ngIf="recForm.valid" class="card-offset-item text-right">
+                        <button type="submit" class="btn btn-success btn-circle btn-lg"><em class="ion-checkmark-round"></em></button>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                        <div>
+                            <label>Email address</label>
+                            <input type="email" name="accountName" formControlName="email" [formControl]="recForm.controls['email']" class="form-control" />
+
+                        </div>
+
+                        <br>
+
+                        <button class="btn btn-warning btn-lg btn-block">Recuperar</button>
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</div>

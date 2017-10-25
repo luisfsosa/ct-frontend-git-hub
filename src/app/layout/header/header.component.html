@@ -1,0 +1,132 @@
+<div class="header-container">
+  <nav>
+    <ul>
+      <li [ngClass]="{'active': settings.app.sidebar.visible}" class="visible-xs visible-sm hidden-md">
+        <a (click)="toggleSidebar()" [ngClass]="settings.app.header.menulink" class="menu-link">
+                    <span><em></em></span>
+                </a>
+      </li>
+      <li [ngClass]="{'active': settings.app.sidebar.offcanvasVisible}" *ngIf="settings.app.sidebar.offcanvas" class="hidden-xs hidden-sm">
+        <a (click)="toggleSidebarOffcanvasVisible()" [ngClass]="settings.app.header.menulink" class="menu-link">
+                    <span><em></em></span>
+                </a>
+      </li>
+    </ul>
+
+    <ul class="pull-left" *ngIf="!active">
+      <li><a [routerLink]="'/private/manage-rfc'" >Crea tu primer RFC</a></li>
+    </ul>
+
+    <ul *ngIf="active" class="pull-left">
+            <li dropdown class="dropdown">
+                <a dropdownToggle class="dropdown-toggle has-badge ripple">
+                   {{_user.getClient().razon_social | limitTo: 50}} - <strong>{{_user.getClient().rfc}}</strong>   <em class="ion-android-arrow-dropdown-circle"></em>
+                </a>
+                <ul *dropdownMenu role="menu" class="dropdown-menu md-dropdown-menu dropdown-menu-left scrollable-menu">
+                    <li *ngFor="let client of RFCS">
+                        <a (click)="this.setClient(client)"><small>{{client.razon_social}}</small> - <strong>{{client.rfc}}</strong></a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+
+
+    <ul class="pull-right">
+
+      <li *ngIf="active" dropdown class="dropdown">
+                <a dropdownToggle class="dropdown-toggle has-badge ripple">
+                  Periodo - {{currentMonth}} <em class="ion-android-arrow-dropdown-circle"></em>
+                </a>
+                <ul *dropdownMenu role="menu" class="dropdown-menu md-dropdown-menu dropdown-menu-left scrollable-menu">
+                    <li *ngFor="let month of monthList" (click)="setPeriod(month)">
+                        <a>Periodo - {{pad(month)}}</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li *ngIf="active" dropdown class="dropdown">
+                <a dropdownToggle class="dropdown-toggle has-badge ripple">
+                 Ciclo - {{currentYear}} <em class="ion-android-arrow-dropdown-circle"></em>
+                </a>
+                <ul *dropdownMenu role="menu" class="dropdown-menu md-dropdown-menu dropdown-menu-left scrollable-menu">
+                    <li *ngFor="let year of yearList" (click)="setCicle(year)">
+                        <a>Ciclo - {{year}}</a>
+                    </li>
+                </ul>
+            </li>
+
+
+
+
+
+
+      <li>
+        <a class="ripple">
+            <em class="fa fa-comments"></em>
+        </a>
+      </li>
+
+      <li dropdown class="dropdown">
+          <a dropdownToggle class="dropdown-toggle has-badge ripple">
+                      <em class="fa fa-question-circle"></em>
+                  </a>
+          <ul *dropdownMenu class="dropdown-menu dropdown-menu-right md-dropdown-menu">
+            <li class="ripple ripple-block">
+              <a><em class="ion-gear-a icon-fw"></em>Ayuda</a>
+            </li>
+          </ul>
+        </li>
+
+
+      <li dropdown class="dropdown">
+        <a dropdownToggle class="dropdown-toggle has-badge ripple">
+                    <em class="ion-gear-a icon-fw"></em>
+                </a>
+        <ul *dropdownMenu class="dropdown-menu dropdown-menu-right md-dropdown-menu">
+          <li class="ripple ripple-block">
+            <a><em class="ion-gear-a icon-fw"></em>Soporte Técnico</a>
+          </li>
+          <li>
+            <a [routerLink]="'/private/manage-rfc'" class="text-success">
+                            <em class="ion-gear-a icon-fw"></em>Administrar RFC Clientes
+                        </a>
+          </li>
+
+          <li class="ripple ripple-block">
+            <a><em class="ion-gear-a icon-fw"></em>Configuración Contribuyente</a>
+          </li>
+          <li class="ripple ripple-block">
+            <a><em class="ion-gear-a icon-fw"></em>Configuración Sistema</a>
+          </li>
+        </ul>
+      </li>
+      <li dropdown class="dropdown">
+        <a dropdownToggle class="dropdown-toggle has-badge ripple">
+                    <em class="ion-person"></em> {{_user.getUser().nombre}}
+                    <!--<sup class="badge bg-danger">3</sup>-->
+                </a>
+        <ul *dropdownMenu class="dropdown-menu dropdown-menu-right md-dropdown-menu">
+          <li class="ripple ripple-block">
+            <a [routerLink]="'/private/profile'"><em class="ion-home icon-fw"></em>Perfil</a>
+          </li>
+
+          <li class="ripple ripple-block">
+            <a [routerLink]="'/private/accounting-accounts'"><em class="ion-home icon-fw"></em>Cuentas Contables</a>
+          </li>
+
+          <li class="ripple ripple-block">
+            <a><em class="ion-gear-a icon-fw"></em>Cambio Contraseña</a>
+          </li>
+          <li role="presentation" class="divider"></li>
+          <li class="ripple ripple-block">
+            <a [routerLink]="'/login'"><em class="ion-log-out icon-fw"></em>Salir</a>
+          </li>
+        </ul>
+      </li>
+      <!--<li><a (click)="seetingsBar.settingsModal.show()" class="ripple"><em class="ion-gear-b"></em></a></li>-->
+    </ul>
+  </nav>
+</div>
+<header-search #headerSearch></header-search>
+<app-settings #seetingsBar></app-settings>
