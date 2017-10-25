@@ -9,7 +9,7 @@
     "install": "napa",
     "start": "ng serve",
     "build": "ng build -e=prod --prod --no-sourcemap --aot=false",
-    "prod": "ng build -e=prod --prod --no-sourcemap --aot=false --bh=https://s3-us-west-2.amazonaws.com/elasticbeanstalk-us-west-2-336285889755/resources/demo/index.html",
+    "prod": "ng build -e=prod --prod --no-sourcemap --aot=false",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
