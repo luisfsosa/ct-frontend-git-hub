@@ -194,7 +194,7 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	% Hard Goals (common to all product variants)
 
-	LHG = [ControlarHumedad, MedirHumedad, RegularHumedad, ControlarAlarma, ControlarSensor],
+	LHG = [ControlarHumedad, MedirHumedad, RegularHumedad, ControlarAlarma, ControlarSensor, ControlarRociador],
 	fd_domain_bool(LHG),
 
 	% Reusable Components (operationalization of the Hard Goals)
@@ -207,7 +207,13 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 	LNFR = [PrecisionMedicion,EficienciaElectricidad, ToleranciaFallos, EficienciaAgua, PrecisionRegulacion],
 	fd_domain(LNFR, 0, 4),
 
-	LSubNFR = [MHEficienciaElectricidad, CFREficienciaElectricidad, MHToleranciaFallos, RHToleranciaFallos, CFRPrecisionMedicion],
+  LSubNFR = [
+        MHPrecisionMedicion, MHEficienciaElectricidad, MHToleranciaFallos,
+        RHEficienciaElectricidad, RHToleranciaFallos, RHEficienciaAgua, RHPrecisionRegulacion,
+        CAEficienciaElectricidad, CAToleranciaFallos,
+        CSEficienciaElectricidad, CSToleranciaFallos,
+        CREficienciaElectricidad, CRToleranciaFallos, CREficienciaAgua, CRPrecisionRegulacion
+      ],
 	fd_domain(LSubNFR, 0, 4),
 
 	% Claims
@@ -235,28 +241,42 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 	ControlarRociador #=RociadorInactivo + RociadorActivo + ReducirRadioAccion + AmpliarRadioAccion,
 
 
+
+% MHPrecisionMedicion, MHEficienciaElectricidad, MHToleranciaFallos,
+  %      RHEficienciaElectricidad, RHToleranciaFallos, RHEficienciaAgua, RHPrecisionRegulacion,
+ %       CAEficienciaElectricidad, CAToleranciaFallos,
+  %      CSEficienciaElectricidad, CSToleranciaFallos,
+  %      CREficienciaElectricidad, CRToleranciaFallos, CREficienciaAgua, CRPrecisionRegulacion
+
 	% Constraints on Claims (as preferences)
 
-	C1 #<=> (MedirHumedadHora #==> MHEficienciaElectricidad #=< 2) #/\ (MedirHumedadDia #==> MHEficienciaElectricidad #>= 3),
+	C1 #<=> (MedirHumedadDia #==> MHPrecisionMedicion #=< 0) #/\ (MedirHumedadHora #==> MHPrecisionMedicion #=< 3) #/\ (MedirHumedadHora #==> MHToleranciaFallos #=< 0) #/\ (MedirHumedadHora #==> MHToleranciaFallos #=< 3),
 
-	C2 #<=> (MedirHumedadHora #==> MHToleranciaFallos #>= 3) #/\ (MedirHumedadDia #==> MHToleranciaFallos #=< 0),
+	C2 #<=> (MedirHumedadDia #==> MHEficienciaElectricidad #=< 3) #/\ (MedirHumedadHora #==> MHEficienciaElectricidad #=< 0),
 
-	C3 #<=> (LineaAgua #==> RHToleranciaFallos #>= 4) #/\ (Lluvia #==> RHToleranciaFallos #=< 0),
+	C3 #<=> (Lluvia #==> RHEficienciaElectricidad #>= 3) #/\ (LineaAgua #==> RHEficienciaElectricidad #>= 2) #/\ (Rocio #==> RHEficienciaElectricidad #=< 0) #/\ (Lluvia #==> RHEficienciaAgua #>= 3) #/\ (LineaAgua #==> RHEficienciaAgua #>= 2) #/\ (Rocio #==> RHEficienciaAgua #=< 0),
 
-	C4 #<=> (AlarmaInactiva #==> CFREficienciaElectricidad #>= 3) #/\ (_AlarmaActiva #==> CFREficienciaElectricidad #=< 0),
+	C4 #<=> (LineaAgua #==> RHToleranciaFallos #>= 4) #/\ (Lluvia #==> RHToleranciaFallos #=< 0),
 
-	C5 #<=> (AlarmaInactiva #==> CFRPrecisionMedicion #=< 1) #/\ (_AlarmaActiva #==> CFRPrecisionMedicion #>= 3),
+	C5 #<=> (AlarmaInactiva #==> CFREficienciaElectricidad #>= 3) #/\ (_AlarmaActiva #==> CFREficienciaElectricidad #=< 0),
 
-	TotC #= C1 + C2 + C3+ C4 + C5,
+	C6 #<=> (AlarmaInactiva #==> CFRPrecisionMedicion #=< 1) #/\ (_AlarmaActiva #==> CFRPrecisionMedicion #>= 3),
+
+	TotC #= C1 + C2 + C3+ C4 + C5 + C6,
 
 	% NFR as mean of SubNFR
 
-	EficienciaElectricidad #= (MHEficienciaElectricidad + 2 * CFREficienciaElectricidad) // 3,
+  PrecisionMedicion #= MHPrecisionMedicion,
 
-	ToleranciaFallos #=< (MHToleranciaFallos + RHToleranciaFallos) // 2 + 1, % + 1 to relax a bit
-	ToleranciaFallos #=< (MHToleranciaFallos + RHToleranciaFallos),          % if both are 0 then ToleranciaFallos = 0
+	EficienciaElectricidad #= (MHEficienciaElectricidad + 2 * RHEficienciaElectricidad + CAEficienciaElectricidad + CSEficienciaElectricidad + 2 *CREficienciaElectricidad) // 7,
 
-	PrecisionMedicion #= CFRPrecisionMedicion,
+  ToleranciaFallos #=< (MHToleranciaFallos + RHToleranciaFallos + CAToleranciaFallos+ CSToleranciaFallos + CRToleranciaFallos) // 5 + 1, % + 1 to relax a bit
+  ToleranciaFallos #=< (MHToleranciaFallos + RHToleranciaFallos + CAToleranciaFallos+ CSToleranciaFallos + CRToleranciaFallos),          % if both are 0 then FaultTolerance = 0
+
+  EficienciaAgua #= (RHEficienciaAgua + 2 * CREficienciaAgua) // 3,
+
+  PrecisionRegulacion  #=< (RHPrecisionRegulacion + 2 * CRPrecisionRegulacion ) // 3,
+
 
 	% TotNFR #= EficienciaElectricidad + ToleranciaFallos + PrecisionMedicion,
 	TotNFR #= EficienciaElectricidad * EficienciaElectricidad + ToleranciaFallos * ToleranciaFallos + PrecisionMedicion * PrecisionMedicion + EficienciaAgua * EficienciaAgua + PrecisionRegulacion * PrecisionRegulacion,
