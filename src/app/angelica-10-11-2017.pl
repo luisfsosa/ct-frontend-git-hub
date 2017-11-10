@@ -86,12 +86,12 @@ write_one(Format, What, Stm, Product) :-
 
 	),
 
-	LRC = [MedirHumedadDia, _MedirHumedadHora, Lluvia, _LineaAgua, AlarmaInactiva, _AlarmaActiva],
+	LRC = [MedirHumedadDia, _MedirHumedadHora, Lluvia, _LineaAgua, _Rocio , AlarmaInactiva, _AlarmaActiva],
 
 	LNFR = [EnergyEfficiency, ToleranciaFallos, PredictionAccuracy],
 
 	name_of(MedirHumedadDia, ['MedirHumedadHora', 'MedirHumedadDia'], NombreMH),
-	name_of(Lluvia, ['Lluvia', 'LineaAgua'], NombreRH),
+	name_of(Lluvia, ['Lluvia', 'LineaAgua', 'Rocio'], NombreRH),
 
 	name_of(AlarmaInactiva, ['AlarmaInactiva', 'AlarmaActiva'], NombreCA),
 
@@ -196,7 +196,7 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	% Reusable Components (operationalization of the Hard Goals)
 
-	LRC = [MedirHumedadDia, MedirHumedadHora, Lluvia, LineaAgua, AlarmaInactiva, AlarmaActiva],
+	LRC = [MedirHumedadDia, MedirHumedadHora, Lluvia, LineaAgua, Rocio, AlarmaInactiva, AlarmaActiva],
 	fd_domain_bool(LRC),
 
 	% Non Functional Requirements
@@ -223,7 +223,7 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	MedirHumedad #= MedirHumedadHora + MedirHumedadDia,
 
-	RegularHumedad #= Lluvia + LineaAgua,
+	RegularHumedad #= Lluvia + LineaAgua +Rocio,
 
 	ControlarAlarma #= AlarmaInactiva + AlarmaActiva,
 
