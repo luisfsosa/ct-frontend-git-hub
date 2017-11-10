@@ -59,10 +59,10 @@ write_header(What, What, Stm, Format) :-
 	    NameLSD = ['SD1','SD2','SD3','SD4','SD5','SD6'],
 	    NameC = ['C1','C2','C3','C4','C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12']
 	),
-	write_line(Format, Stm, ['MedHumedad':9, 'RegHumedad':10, 'ContrAlarma':15, 'ContrSensor':8, 'ContrRociador':12,
-				 'PM', 'EE', 'TF', 'EA', 'PR', 'TotNFR',
-				 NameLSD, 'TotSD',
-				 NameC, 'TotC', 'ObjValue']), nl(Stm).
+	write_line(Format, Stm, ['MedHumedad':16, 'RegHumedad':10, 'ContrAlarma':15, 'ContrSensor':14, 'ContrRociador':14,
+				 'PM':2, 'EE':2, 'TF':6, 'PA', 'TotNFR':12,
+				 NameLSD:15, 'TotSD':5,
+				 NameC:18, 'TotC':10, 'ObjValue':10]), nl(Stm).
 
 
 write_header(_, _, _, _).
@@ -97,10 +97,10 @@ write_one(Format, What, Stm, Product) :-
 	name_of(RociadorInactivo, ['RociadorInactivo', 'RociadorActivo', 'ReducirRadioAccion', 'AmpliarRadioAccion'], NombreCR),
 
 	name_of(EnergyEfficiency, [--, -, =, +, ++], LevelEE),
-	name_of(ToleranciaFallos, [--, -, =, +, ++], LevelFT),
+	name_of(ToleranciaFallos, [--, -, =, +, ++], LevelTF),
 	name_of(PredictionAccuracy, [--, -, =, +, ++], LevelPA),
 
-	write_line(Format, Stm, [NombreMH:9, NombreRH:10, NombreCA:15, NombreCS:10, NombreCR:8, LevelEE:2, LevelFT:2, LevelPA:2, TotNFR:6, LSD, TotSD:5, LC, TotC:4, ObjValue:6]).
+	write_line(Format, Stm, [NombreMH:16, NombreRH:10, NombreCA:15, NombreCS:14, NombreCR:14, LevelEE:2, LevelTF:2, LevelPA:6, TotNFR:12, LSD:10, TotSD:10, LC:10, TotC:10, ObjValue:10]).
 
 
 write_line(txt, Stm, LElem) :-
