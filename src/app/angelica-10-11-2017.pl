@@ -88,7 +88,7 @@ write_one(Format, What, Stm, Product) :-
 
 	LRC = [MedirHumedadDia, _MedirHumedadHora, Lluvia, _LineaAgua, _Rocio , AlarmaInactiva, _AlarmaActiva, SensorInactivo, _SensorActivo, RociadorInactivo, _RociadorActivo, _ReducirRadioAccion, _AmpliarRadioAccion ],
 
-	LNFR = [EnergyEfficiency, ToleranciaFallos, PredictionAccuracy],
+	LNFR = [PrecisionMedicion, EficienciaElectricidad, ToleranciaFallos],
 
 	name_of(MedirHumedadDia, ['MedirHumedadHora', 'MedirHumedadDia'], NombreMH),
 	name_of(Lluvia, ['Lluvia', 'LineaAgua', 'Rocio'], NombreRH),
@@ -96,11 +96,12 @@ write_one(Format, What, Stm, Product) :-
 	name_of(SensorInactivo, ['SensorInactivo', 'SensorActivo'], NombreCS),
 	name_of(RociadorInactivo, ['RociadorInactivo', 'RociadorActivo', 'ReducirRadioAccion', 'AmpliarRadioAccion'], NombreCR),
 
-	name_of(EnergyEfficiency, [--, -, =, +, ++], LevelEE),
-	name_of(ToleranciaFallos, [--, -, =, +, ++], LevelTF),
-	name_of(PredictionAccuracy, [--, -, =, +, ++], LevelPA),
+	name_of(PrecisionMedicion, [--, -, =, +, ++], NivelPM),
+	name_of(EficienciaElectricidad, [--, -, =, +, ++], NivelEE),
+	name_of(ToleranciaFallos, [--, -, =, +, ++], NivelTF),
 
-	write_line(Format, Stm, [NombreMH:16, NombreRH:10, NombreCA:15, NombreCS:14, NombreCR:14, LevelEE:2, LevelTF:2, LevelPA:6, TotNFR:12, LSD:10, TotSD:10, LC:10, TotC:10, ObjValue:10]).
+
+	write_line(Format, Stm, [NombreMH:16, NombreRH:10, NombreCA:15, NombreCS:14, NombreCR:14, NivelPM:2, NivelEE:2, NivelTF:6, TotNFR:12, LSD:10, TotSD:10, LC:10, TotC:10, ObjValue:10]).
 
 
 write_line(txt, Stm, LElem) :-
@@ -202,10 +203,10 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	% Non Functional Requirements
 
-	LNFR = [EnergyEfficiency, ToleranciaFallos, PredictionAccuracy],
+	LNFR = [PrecisionMedicion,EficienciaElectricidad, ToleranciaFallos],
 	fd_domain(LNFR, 0, 4),
 
-	LSubNFR = [MHEnergyEfficiency, CFREnergyEfficiency, MHToleranciaFallos, RHToleranciaFallos, CFRPredictionAccuracy],
+	LSubNFR = [MHEficienciaElectricidad, CFREficienciaElectricidad, MHToleranciaFallos, RHToleranciaFallos, CFRPrecisionMedicion],
 	fd_domain(LSubNFR, 0, 4),
 
 	% Claims
@@ -235,43 +236,43 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	% Constraints on Claims (as preferences)
 
-	C1 #<=> (MedirHumedadHora #==> MHEnergyEfficiency #=< 2) #/\ (MedirHumedadDia #==> MHEnergyEfficiency #>= 3),
+	C1 #<=> (MedirHumedadHora #==> MHEficienciaElectricidad #=< 2) #/\ (MedirHumedadDia #==> MHEficienciaElectricidad #>= 3),
 
 	C2 #<=> (MedirHumedadHora #==> MHToleranciaFallos #>= 3) #/\ (MedirHumedadDia #==> MHToleranciaFallos #=< 0),
 
 	C3 #<=> (LineaAgua #==> RHToleranciaFallos #>= 4) #/\ (Lluvia #==> RHToleranciaFallos #=< 0),
 
-	C4 #<=> (AlarmaInactiva #==> CFREnergyEfficiency #>= 3) #/\ (_AlarmaActiva #==> CFREnergyEfficiency #=< 0),
+	C4 #<=> (AlarmaInactiva #==> CFREficienciaElectricidad #>= 3) #/\ (_AlarmaActiva #==> CFREficienciaElectricidad #=< 0),
 
-	C5 #<=> (AlarmaInactiva #==> CFRPredictionAccuracy #=< 1) #/\ (_AlarmaActiva #==> CFRPredictionAccuracy #>= 3),
+	C5 #<=> (AlarmaInactiva #==> CFRPrecisionMedicion #=< 1) #/\ (_AlarmaActiva #==> CFRPrecisionMedicion #>= 3),
 
 	TotC #= C1 + C2 + C3+ C4 + C5,
 
 	% NFR as mean of SubNFR
 
-	EnergyEfficiency #= (MHEnergyEfficiency + 2 * CFREnergyEfficiency) // 3,
+	EficienciaElectricidad #= (MHEficienciaElectricidad + 2 * CFREficienciaElectricidad) // 3,
 
 	ToleranciaFallos #=< (MHToleranciaFallos + RHToleranciaFallos) // 2 + 1, % + 1 to relax a bit
 	ToleranciaFallos #=< (MHToleranciaFallos + RHToleranciaFallos),          % if both are 0 then ToleranciaFallos = 0
 
-	PredictionAccuracy #= CFRPredictionAccuracy,
+	PrecisionMedicion #= CFRPrecisionMedicion,
 
-	% TotNFR #= EnergyEfficiency + ToleranciaFallos + PredictionAccuracy,
-	TotNFR #= EnergyEfficiency * EnergyEfficiency + ToleranciaFallos * ToleranciaFallos + PredictionAccuracy * PredictionAccuracy,
+	% TotNFR #= EficienciaElectricidad + ToleranciaFallos + PrecisionMedicion,
+	TotNFR #= EficienciaElectricidad * EficienciaElectricidad + ToleranciaFallos * ToleranciaFallos + PrecisionMedicion * PrecisionMedicion,
 
 	% Soft Dependencies
 
-	SD1 #<=> (ConsumoElectricidad #= 0 #==> EnergyEfficiency #= 4),
+	SD1 #<=> (ConsumoElectricidad #= 0 #==> EficienciaElectricidad #= 4),
 
-	SD2 #<=> (ConsumoAgua #= 0 #==> EnergyEfficiency #= 4),
+	SD2 #<=> (ConsumoAgua #= 0 #==> EficienciaElectricidad #= 4),
 
-	SD3 #<=> (Lluvia #= 0 #==> EnergyEfficiency #= 4),
+	SD3 #<=> (Lluvia #= 0 #==> EficienciaElectricidad #= 4),
 
-	SD4 #<=> (Humedad #= 0 #==> EnergyEfficiency #= 4),
+	SD4 #<=> (Humedad #= 0 #==> EficienciaElectricidad #= 4),
 
-	SD5 #<=> (Humedad #= 2 #==> (ToleranciaFallos #= 4 #/\ PredictionAccuracy #= 4)),
+	SD5 #<=> (Humedad #= 2 #==> (ToleranciaFallos #= 4 #/\ PrecisionMedicion #= 4)),
 
-	SD6 #<=> (Humedad #= 1 #==> PredictionAccuracy #= 4),
+	SD6 #<=> (Humedad #= 1 #==> PrecisionMedicion #= 4),
 
 	TotSD #= SD1 + SD2 + SD3+ SD4 +SD5 + SD6,
 
