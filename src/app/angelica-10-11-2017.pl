@@ -86,7 +86,7 @@ write_one(Format, What, Stm, Product) :-
 
 	),
 
-	LRC = [MedirHumedadDia, _MedirHumedadHora, Lluvia, _LineaAgua, _Rocio , AlarmaInactiva, _AlarmaActiva, SensorInactivo, _SensorActivo ],
+	LRC = [MedirHumedadDia, _MedirHumedadHora, Lluvia, _LineaAgua, _Rocio , AlarmaInactiva, _AlarmaActiva, SensorInactivo, _SensorActivo, RociadorInactivo, _RociadorActivo, _ReducirRadioAccion, _AmpliarRadioAccion ],
 
 	LNFR = [EnergyEfficiency, ToleranciaFallos, PredictionAccuracy],
 
@@ -94,12 +94,13 @@ write_one(Format, What, Stm, Product) :-
 	name_of(Lluvia, ['Lluvia', 'LineaAgua', 'Rocio'], NombreRH),
 	name_of(AlarmaInactiva, ['AlarmaInactiva', 'AlarmaActiva'], NombreCA),
 	name_of(SensorInactivo, ['SensorInactivo', 'SensorActivo'], NombreCS),
+	name_of(RociadorInactivo, ['RociadorInactivo', 'RociadorActivo', 'ReducirRadioAccion', 'AmpliarRadioAccion'], NombreCR),
 
 	name_of(EnergyEfficiency, [--, -, =, +, ++], LevelEE),
 	name_of(ToleranciaFallos, [--, -, =, +, ++], LevelFT),
 	name_of(PredictionAccuracy, [--, -, =, +, ++], LevelPA),
 
-	write_line(Format, Stm, [NombreMH:9, NombreRH:10, NombreCA:15, NombreCS:10, LevelEE:2, LevelFT:2, LevelPA:2, TotNFR:6, LSD, TotSD:5, LC, TotC:4, ObjValue:6]).
+	write_line(Format, Stm, [NombreMH:9, NombreRH:10, NombreCA:15, NombreCS:10, NombreCR:8, LevelEE:2, LevelFT:2, LevelPA:2, TotNFR:6, LSD, TotSD:5, LC, TotC:4, ObjValue:6]).
 
 
 write_line(txt, Stm, LElem) :-
@@ -196,7 +197,7 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	% Reusable Components (operationalization of the Hard Goals)
 
-	LRC = [MedirHumedadDia, MedirHumedadHora, Lluvia, LineaAgua, Rocio, AlarmaInactiva, AlarmaActiva, SensorInactivo, SensorActivo],
+	LRC = [MedirHumedadDia, MedirHumedadHora, Lluvia, LineaAgua, Rocio, AlarmaInactiva, AlarmaActiva, SensorInactivo, SensorActivo, RociadorInactivo, RociadorActivo, ReducirRadioAccion, AmpliarRadioAccion],
 	fd_domain_bool(LRC),
 
 	% Non Functional Requirements
@@ -219,7 +220,7 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	ControlarHumedad #= 1,
 
-	ControlarHumedad * 4 #= MedirHumedad + RegularHumedad + ControlarAlarma + ControlarSensor,
+	ControlarHumedad * 5 #= MedirHumedad + RegularHumedad + ControlarAlarma + ControlarSensor +ControlarRociador,
 
 	MedirHumedad #= MedirHumedadHora + MedirHumedadDia,
 
@@ -228,6 +229,8 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 	ControlarAlarma #= AlarmaInactiva + AlarmaActiva,
 
 	ControlarSensor #=SensorInactivo + SensorActivo,
+
+	ControlarRociador #=RociadorInactivo + RociadorActivo + ReducirRadioAccion + AmpliarRadioAccion,
 
 
 	% Constraints on Claims (as preferences)
