@@ -86,20 +86,20 @@ write_one(Format, What, Stm, Product) :-
 
 	),
 
-	LRC = [MedirHumedadDia, _MedirHumedadHora, Lluvia, _LineaAgua, _Rocio , AlarmaInactiva, _AlarmaActiva],
+	LRC = [MedirHumedadDia, _MedirHumedadHora, Lluvia, _LineaAgua, _Rocio , AlarmaInactiva, _AlarmaActiva, SensorInactivo, _SensorActivo ],
 
 	LNFR = [EnergyEfficiency, ToleranciaFallos, PredictionAccuracy],
 
 	name_of(MedirHumedadDia, ['MedirHumedadHora', 'MedirHumedadDia'], NombreMH),
 	name_of(Lluvia, ['Lluvia', 'LineaAgua', 'Rocio'], NombreRH),
-
 	name_of(AlarmaInactiva, ['AlarmaInactiva', 'AlarmaActiva'], NombreCA),
+	name_of(SensorInactivo, ['SensorInactivo', 'SensorActivo'], NombreCS),
 
 	name_of(EnergyEfficiency, [--, -, =, +, ++], LevelEE),
 	name_of(ToleranciaFallos, [--, -, =, +, ++], LevelFT),
 	name_of(PredictionAccuracy, [--, -, =, +, ++], LevelPA),
 
-	write_line(Format, Stm, [NombreMH:9, NombreRH:10, NombreCA:15, LevelEE:2, LevelFT:2, LevelPA:2, TotNFR:6, LSD, TotSD:5, LC, TotC:4, ObjValue:6]).
+	write_line(Format, Stm, [NombreMH:9, NombreRH:10, NombreCA:15, NombreCS:10, LevelEE:2, LevelFT:2, LevelPA:2, TotNFR:6, LSD, TotSD:5, LC, TotC:4, ObjValue:6]).
 
 
 write_line(txt, Stm, LElem) :-
@@ -191,12 +191,12 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	% Hard Goals (common to all product variants)
 
-	LHG = [ControlarHumedad, MedirHumedad, RegularHumedad, ControlarAlarma, MeasureDepth],
+	LHG = [ControlarHumedad, MedirHumedad, RegularHumedad, ControlarAlarma, ControlarSensor],
 	fd_domain_bool(LHG),
 
 	% Reusable Components (operationalization of the Hard Goals)
 
-	LRC = [MedirHumedadDia, MedirHumedadHora, Lluvia, LineaAgua, Rocio, AlarmaInactiva, AlarmaActiva],
+	LRC = [MedirHumedadDia, MedirHumedadHora, Lluvia, LineaAgua, Rocio, AlarmaInactiva, AlarmaActiva, SensorInactivo, SensorActivo],
 	fd_domain_bool(LRC),
 
 	% Non Functional Requirements
@@ -219,13 +219,15 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	ControlarHumedad #= 1,
 
-	ControlarHumedad * 4 #= MedirHumedad + RegularHumedad + ControlarAlarma + MeasureDepth,
+	ControlarHumedad * 4 #= MedirHumedad + RegularHumedad + ControlarAlarma + ControlarSensor,
 
 	MedirHumedad #= MedirHumedadHora + MedirHumedadDia,
 
 	RegularHumedad #= Lluvia + LineaAgua +Rocio,
 
 	ControlarAlarma #= AlarmaInactiva + AlarmaActiva,
+
+	ControlarSensor #=SensorInactivo + SensorActivo,
 
 
 	% Constraints on Claims (as preferences)
