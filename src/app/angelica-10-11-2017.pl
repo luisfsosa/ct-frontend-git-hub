@@ -86,19 +86,20 @@ write_one(Format, What, Stm, Product) :-
 
 	),
 
-	LRC = [MedirHumedadDia, _MedirHumedadHora, Lluvia, _LineaAgua, DistributedProcessing, _SingleNodeProcessing],
+	LRC = [MedirHumedadDia, _MedirHumedadHora, Lluvia, _LineaAgua, AlarmaInactiva, _AlarmaActiva],
 
 	LNFR = [EnergyEfficiency, ToleranciaFallos, PredictionAccuracy],
 
 	name_of(MedirHumedadDia, ['MedirHumedadHora', 'MedirHumedadDia'], NombreMH),
 	name_of(Lluvia, ['Lluvia', 'LineaAgua'], NombreRH),
-	name_of(DistributedProcessing, ['SingleNodeProc', 'DistributedProc'], NameCFR),
+
+	name_of(AlarmaInactiva, ['AlarmaInactiva', 'AlarmaActiva'], NombreCA),
 
 	name_of(EnergyEfficiency, [--, -, =, +, ++], LevelEE),
 	name_of(ToleranciaFallos, [--, -, =, +, ++], LevelFT),
 	name_of(PredictionAccuracy, [--, -, =, +, ++], LevelPA),
 
-	write_line(Format, Stm, [NombreMH:9, NombreRH:10, NameCFR:15, LevelEE:2, LevelFT:2, LevelPA:2, TotNFR:6, LSD, TotSD:5, LC, TotC:4, ObjValue:6]).
+	write_line(Format, Stm, [NombreMH:9, NombreRH:10, NombreCA:15, LevelEE:2, LevelFT:2, LevelPA:2, TotNFR:6, LSD, TotSD:5, LC, TotC:4, ObjValue:6]).
 
 
 write_line(txt, Stm, LElem) :-
@@ -190,12 +191,12 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	% Hard Goals (common to all product variants)
 
-	LHG = [ControlarHumedad, MedirHumedad, RegularHumedad, MeasureDepth, CalculateFlowRate],
+	LHG = [ControlarHumedad, MedirHumedad, RegularHumedad, ControlarAlarma, MeasureDepth],
 	fd_domain_bool(LHG),
 
 	% Reusable Components (operationalization of the Hard Goals)
 
-	LRC = [MedirHumedadDia, MedirHumedadHora, Lluvia, LineaAgua, DistributedProcessing, SingleNodeProcessing],
+	LRC = [MedirHumedadDia, MedirHumedadHora, Lluvia, LineaAgua, AlarmaInactiva, AlarmaActiva],
 	fd_domain_bool(LRC),
 
 	% Non Functional Requirements
@@ -218,13 +219,13 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	ControlarHumedad #= 1,
 
-	ControlarHumedad * 4 #= MedirHumedad + RegularHumedad + CalculateFlowRate + MeasureDepth,
+	ControlarHumedad * 4 #= MedirHumedad + RegularHumedad + ControlarAlarma + MeasureDepth,
 
 	MedirHumedad #= MedirHumedadHora + MedirHumedadDia,
 
 	RegularHumedad #= Lluvia + LineaAgua,
 
-	CalculateFlowRate #= DistributedProcessing + SingleNodeProcessing,
+	ControlarAlarma #= AlarmaInactiva + AlarmaActiva,
 
 
 	% Constraints on Claims (as preferences)
@@ -235,9 +236,9 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	C3 #<=> (LineaAgua #==> RHToleranciaFallos #>= 4) #/\ (Lluvia #==> RHToleranciaFallos #=< 0),
 
-	C4 #<=> (SingleNodeProcessing #==> CFREnergyEfficiency #>= 3) #/\ (DistributedProcessing #==> CFREnergyEfficiency #=< 0),
+	C4 #<=> (AlarmaInactiva #==> CFREnergyEfficiency #>= 3) #/\ (_AlarmaActiva #==> CFREnergyEfficiency #=< 0),
 
-	C5 #<=> (SingleNodeProcessing #==> CFRPredictionAccuracy #=< 1) #/\ (DistributedProcessing #==> CFRPredictionAccuracy #>= 3),
+	C5 #<=> (AlarmaInactiva #==> CFRPredictionAccuracy #=< 1) #/\ (_AlarmaActiva #==> CFRPredictionAccuracy #>= 3),
 
 	TotC #= C1 + C2 + C3+ C4 + C5,
 
