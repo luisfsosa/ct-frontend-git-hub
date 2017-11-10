@@ -60,10 +60,9 @@ write_header(What, What, Stm, Format) :-
 	    NameC = ['C1','C2','C3','C4','C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12']
 	),
 	write_line(Format, Stm, ['MedHumedad':16, 'RegHumedad':10, 'ContrAlarma':15, 'ContrSensor':14, 'ContrRociador':14,
-				 'PM':2, 'EE':2, 'TF':6, 'PA', 'TotNFR':12,
+				 'PM':2, 'EE':2, 'TF':2, 'EA':2, 'PR':6, 'TotNFR':12,
 				 NameLSD:15, 'TotSD':5,
 				 NameC:18, 'TotC':10, 'ObjValue':10]), nl(Stm).
-
 
 write_header(_, _, _, _).
 
@@ -88,7 +87,7 @@ write_one(Format, What, Stm, Product) :-
 
 	LRC = [MedirHumedadDia, _MedirHumedadHora, Lluvia, _LineaAgua, _Rocio , AlarmaInactiva, _AlarmaActiva, SensorInactivo, _SensorActivo, RociadorInactivo, _RociadorActivo, _ReducirRadioAccion, _AmpliarRadioAccion ],
 
-	LNFR = [PrecisionMedicion, EficienciaElectricidad, ToleranciaFallos],
+	LNFR = [PrecisionMedicion, EficienciaElectricidad, ToleranciaFallos, EficienciaAgua, PrecisionRegulacion],
 
 	name_of(MedirHumedadDia, ['MedirHumedadHora', 'MedirHumedadDia'], NombreMH),
 	name_of(Lluvia, ['Lluvia', 'LineaAgua', 'Rocio'], NombreRH),
@@ -99,9 +98,11 @@ write_one(Format, What, Stm, Product) :-
 	name_of(PrecisionMedicion, [--, -, =, +, ++], NivelPM),
 	name_of(EficienciaElectricidad, [--, -, =, +, ++], NivelEE),
 	name_of(ToleranciaFallos, [--, -, =, +, ++], NivelTF),
+	name_of(EficienciaAgua, [--, -, =, +, ++], NivelEA),
+  name_of(PrecisionRegulacion, [--, -, =, +, ++], NivelPR),
 
 
-	write_line(Format, Stm, [NombreMH:16, NombreRH:10, NombreCA:15, NombreCS:14, NombreCR:14, NivelPM:2, NivelEE:2, NivelTF:6, TotNFR:12, LSD:10, TotSD:10, LC:10, TotC:10, ObjValue:10]).
+	write_line(Format, Stm, [NombreMH:16, NombreRH:10, NombreCA:15, NombreCS:14, NombreCR:14, NivelPM:2, NivelEE:2, NivelTF:2, NivelEA:2, NivelPR:6, TotNFR:12, LSD:10, TotSD:10, LC:10, TotC:10, ObjValue:10]).
 
 
 write_line(txt, Stm, LElem) :-
@@ -203,7 +204,7 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	% Non Functional Requirements
 
-	LNFR = [PrecisionMedicion,EficienciaElectricidad, ToleranciaFallos],
+	LNFR = [PrecisionMedicion,EficienciaElectricidad, ToleranciaFallos, EficienciaAgua, PrecisionRegulacion],
 	fd_domain(LNFR, 0, 4),
 
 	LSubNFR = [MHEficienciaElectricidad, CFREficienciaElectricidad, MHToleranciaFallos, RHToleranciaFallos, CFRPrecisionMedicion],
@@ -258,7 +259,7 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 	PrecisionMedicion #= CFRPrecisionMedicion,
 
 	% TotNFR #= EficienciaElectricidad + ToleranciaFallos + PrecisionMedicion,
-	TotNFR #= EficienciaElectricidad * EficienciaElectricidad + ToleranciaFallos * ToleranciaFallos + PrecisionMedicion * PrecisionMedicion,
+	TotNFR #= EficienciaElectricidad * EficienciaElectricidad + ToleranciaFallos * ToleranciaFallos + PrecisionMedicion * PrecisionMedicion + EficienciaAgua * EficienciaAgua + PrecisionRegulacion * PrecisionRegulacion,
 
 	% Soft Dependencies
 
