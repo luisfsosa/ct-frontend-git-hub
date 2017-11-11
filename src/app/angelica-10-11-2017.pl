@@ -75,9 +75,9 @@ write_one(Format, What, Stm, Product) :-
 	;
 	    g_assign(cxt, [Humedad, ConsumoElectricidad,ConsumoAgua, LluviaPresente]),
 	    name_of(Humedad, [normal, baja, critica], NameHumedad),
-	    name_of(ConsumoElectricidad, [low, normal], NameConsumoElectricidad),
-	   	name_of(ConsumoAgua, [low, normal], NameConsumoAgua),
-	   	name_of(LluviaPresente, [false, true], NameLluviaPresente),
+	    name_of(ConsumoElectricidad, [bajo, alto], NameConsumoElectricidad),
+	   	name_of(ConsumoAgua, [bajo, alto], NameConsumoAgua),
+	   	name_of(LluviaPresente, [no, si], NameLluviaPresente),
 	    write_line(Format, Stm, []),
 	    write_line(Format, Stm, ['Context:', NameHumedad, NameConsumoElectricidad, NameConsumoAgua,NameLluviaPresente]),
 	    write_line(Format, Stm, []),
@@ -189,7 +189,7 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	fd_domain(ConsumoElectricidad, 0, 1),     %  0 = low, 1 = normal
 	fd_domain(ConsumoAgua, 0, 1),     %  0 = low, 1 = normal
-	fd_domain(LluviaPresente, 0, 1),     %  0 = false, 1 = true
+	fd_domain(LluviaPresente, 0, 1),     %  0 = no, 1 = si
 	fd_domain(Humedad, 0, 2),     %  0 = normal, 1 = baja, 2 = Crítica
 
 	% Hard Goals (common to all product variants)
@@ -241,13 +241,6 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 	ControlarRociador #=RociadorInactivo + RociadorActivo + ReducirRadioAccion + AmpliarRadioAccion,
 
 
-
-% MHPrecisionMedicion, MHEficienciaElectricidad, MHToleranciaFallos,
-  %      RHEficienciaElectricidad, RHToleranciaFallos, RHEficienciaAgua, RHPrecisionRegulacion,
- %       CAEficienciaElectricidad, CAToleranciaFallos,
-  %      CSEficienciaElectricidad, CSToleranciaFallos,
-  %      CREficienciaElectricidad, CRToleranciaFallos, CREficienciaAgua, CRPrecisionRegulacion
-
 	% Constraints on Claims (as preferences)
 
 	C1 #<=> (MedirHumedadDia #==> MHPrecisionMedicion #=< 0) #/\ (MedirHumedadHora #==> MHPrecisionMedicion #=< 3) #/\ (MedirHumedadHora #==> MHToleranciaFallos #=< 0) #/\ (MedirHumedadHora #==> MHToleranciaFallos #=< 3),
@@ -295,17 +288,17 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	% Soft Dependencies
 
-	SD1 #<=> (ConsumoElectricidad #= 0 #==> EficienciaElectricidad #= 4),
+	SD1 #<=> (Humedad #= 0 #==> PrecisionMedicion #= 4),
 
-	SD2 #<=> (ConsumoAgua #= 0 #==> EficienciaElectricidad #= 4),
+	SD2 #<=> (Humedad #= 1 #==> (EficienciaElectricidad #= 4 #/\ EficienciaAgua #= 4)),
 
-	SD3 #<=> (Lluvia #= 0 #==> EficienciaElectricidad #= 4),
+	SD3 #<=> (ConsumoAgua #= 1 #==> EficienciaAgua #= 4),
 
-	SD4 #<=> (Humedad #= 0 #==> EficienciaElectricidad #= 4),
+	SD4 #<=> (LluviaPresente #= 1 #==> PrecisionMedicion #= 4),
 
-	SD5 #<=> (Humedad #= 2 #==> (ToleranciaFallos #= 4 #/\ PrecisionMedicion #= 4)),
+	SD5 #<=> (Humedad #= 2 #==> (PrecisionMedicion #= 4 #/\ ToleranciaFallos #= 4 #/\ PrecisionRegulacion #= 4)),
 
-	SD6 #<=> (Humedad #= 1 #==> PrecisionMedicion #= 4),
+	SD6 #<=> (ConsumoElectricidad #= 1 #==> EficienciaElectricidad #= 4),
 
 	TotSD #= SD1 + SD2 + SD3+ SD4 +SD5 + SD6,
 
