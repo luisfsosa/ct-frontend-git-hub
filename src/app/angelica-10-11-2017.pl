@@ -256,13 +256,25 @@ set_constraint(Humedad, ConsumoElectricidad,ConsumoAgua,LluviaPresente, LC, TotC
 
 	C3 #<=> (Lluvia #==> RHEficienciaElectricidad #>= 3) #/\ (LineaAgua #==> RHEficienciaElectricidad #>= 2) #/\ (Rocio #==> RHEficienciaElectricidad #=< 0) #/\ (Lluvia #==> RHEficienciaAgua #>= 3) #/\ (LineaAgua #==> RHEficienciaAgua #>= 2) #/\ (Rocio #==> RHEficienciaAgua #=< 0),
 
-	C4 #<=> (LineaAgua #==> RHToleranciaFallos #>= 4) #/\ (Lluvia #==> RHToleranciaFallos #=< 0),
+	C4 #<=> (Lluvia #==> RHToleranciaFallos #=< 0) #/\ (LineaAgua #==> RHToleranciaFallos #=< 2) #/\ (Rocio #==> RHToleranciaFallos #>= 3) #/\ (Lluvia #==> RHPrecisionRegulacion #=< 0) #/\ (LineaAgua #==> RHPrecisionRegulacion #=< 2) #/\ (Rocio #==> RHPrecisionRegulacion #>= 3),
 
-	C5 #<=> (AlarmaInactiva #==> CFREficienciaElectricidad #>= 3) #/\ (_AlarmaActiva #==> CFREficienciaElectricidad #=< 0),
+	C5 #<=> (AlarmaActiva #==> CAEficienciaElectricidad #=< 0) #/\ (AlarmaInactiva #==> CAEficienciaElectricidad #>= 3),
 
-	C6 #<=> (AlarmaInactiva #==> CFRPrecisionMedicion #=< 1) #/\ (_AlarmaActiva #==> CFRPrecisionMedicion #>= 3),
+	C6 #<=> (AlarmaActiva #==> CAToleranciaFallos #>= 3) #/\ (AlarmaInactiva #==> CAToleranciaFallos #=< 0),
 
-	TotC #= C1 + C2 + C3+ C4 + C5 + C6,
+	C7 #<=> (SensorInactivo #==> CSEficienciaElectricidad #=< 0) #/\ (SensorActivo #==> CSEficienciaElectricidad #>= 3),
+
+	C8 #<=> (SensorInactivo #==> CSToleranciaFallos #>= 3) #/\ (SensorActivo #==> CSToleranciaFallos  #=< 0),
+
+	C9 #<=> (RociadorInactivo #==> CREficienciaElectricidad #>= 3) #/\ (RociadorInactivo #==> CREficienciaElectricidad  #=< 0),
+
+	C10 #<=> (RociadorInactivo #==> CRToleranciaFallos #=< 0) #/\ (RociadorInactivo #==> CRToleranciaFallos  #>= 3),
+
+	C11 #<=> (ReducirRadioAccion #==> CREficienciaAgua #>= 3) #/\ (AmpliarRadioAccion #==> CREficienciaAgua  #=< 0),
+
+	C12 #<=> (ReducirRadioAccion #==> CRPrecisionRegulacion #>= 3) #/\ (AmpliarRadioAccion #==> CRPrecisionRegulacion  #=< 0),
+
+	TotC #= C1 + C2 + C3+ C4 + C5 + C6 + C7 +C8 +C9 + C10 + C11 + C12,
 
 	% NFR as mean of SubNFR
 
